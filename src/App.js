@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import Background from "./assets/images/converter-bg.jpg";
 import axios from "axios";
@@ -17,15 +17,12 @@ const App = () => {
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [result, setResult] = useState(null);
 
+  const eurosInput = useRef(null);
+
   const formatedAmount = new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
   }).format(amount);
-
-  const formatedResult = new Intl.NumberFormat({
-    style: "currency",
-    currency: selectedCurrency,
-  }).format(result);
 
   const handleChange = (e) => {
     const currentValue = e.target.value;
@@ -84,8 +81,14 @@ const App = () => {
           (rate) => rate.symbol === selectedCurrency
         );
         if (amount && currencyRate) {
-          const calculatedResult = (amount * currencyRate.rate).toFixed(4);
-          setResult(calculatedResult);
+          const calculatedResult = amount * currencyRate.rate;
+
+          const formatedResult = new Intl.NumberFormat({
+            style: "currency",
+            currency: selectedCurrency,
+          }).format(calculatedResult);
+
+          setResult(formatedResult);
         }
       }
     };
@@ -108,7 +111,7 @@ const App = () => {
             it’s free, and it’s based on real-time exchange rate for 170 world
             currencies.
           </p>
-          <button>Let's go</button>
+          <button onClick={() => eurosInput.current.focus()}>Let's go</button>
         </div>
         <div className="converter">
           <h2>How to convert your euros into another currency</h2>
@@ -119,7 +122,7 @@ const App = () => {
           </p>
           <div className="form-wrapper">
             <TextField
-              // inputRef={ref}
+              inputRef={eurosInput}
               label="Euros"
               name="amount"
               type="number"
@@ -154,7 +157,7 @@ const App = () => {
             </FormControl>
           </div>
           {result ? (
-            <p className="result">{`${formatedAmount} = ${formatedResult} ${selectedCurrency}`}</p>
+            <p className="result">{`${formatedAmount} = ${result} ${selectedCurrency}`}</p>
           ) : (
             <p className="result">Your result will appear here</p>
           )}
