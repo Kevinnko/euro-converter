@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Background from "./assets/images/converter-bg.jpg";
 import axios from "axios";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import FormControl from "@material-ui/core/FormControl";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
@@ -11,6 +16,16 @@ const App = () => {
   const [rates, setRates] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [result, setResult] = useState(null);
+
+  const formatedAmount = new Intl.NumberFormat("fr-FR", {
+    style: "currency",
+    currency: "EUR",
+  }).format(amount);
+
+  const formatedResult = new Intl.NumberFormat({
+    style: "currency",
+    currency: selectedCurrency,
+  }).format(result);
 
   const handleChange = (e) => {
     const currentValue = e.target.value;
@@ -103,32 +118,43 @@ const App = () => {
             silver platter, instantly.
           </p>
           <div className="form-wrapper">
-            <input
-              type="number"
+            <TextField
+              // inputRef={ref}
+              label="Euros"
               name="amount"
-              placeholder="Enter here your amount in euros"
+              type="number"
+              placeholder="Amount in euros"
+              InputLabelProps={{
+                shrink: true,
+              }}
               value={amount || ""}
               onChange={handleChange}
+              variant="outlined"
             />
-            <select
-              value={selectedCurrency}
-              onChange={(e) => setSelectedCurrency(e.target.value)}
-            >
-              <option value="" disabled>
-                Select your option
-              </option>
-              {currencies &&
-                currencies.map((currency, index) => {
-                  return (
-                    <option key={index} value={currency.symbol}>
-                      {`${currency.symbol} - ${currency.name}`}
-                    </option>
-                  );
-                })}
-            </select>
+            <FormControl variant="outlined">
+              <InputLabel>Currency</InputLabel>
+              <Select
+                value={selectedCurrency}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
+                label="Currency"
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {currencies &&
+                  currencies.map((currency, index) => {
+                    return (
+                      <MenuItem
+                        key={index}
+                        value={currency.symbol}
+                      >{`${currency.symbol} - ${currency.name}`}</MenuItem>
+                    );
+                  })}
+              </Select>
+            </FormControl>
           </div>
           {result ? (
-            <p className="result">{`${amount} EUR  = ${result} ${selectedCurrency}`}</p>
+            <p className="result">{`${formatedAmount} = ${formatedResult} ${selectedCurrency}`}</p>
           ) : (
             <p className="result">Your result will appear here</p>
           )}
