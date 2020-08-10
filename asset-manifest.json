@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/euro-converter/static/css/main.00069f1e.chunk.css",
-    "main.js": "/euro-converter/static/js/main.ff0bb26a.chunk.js",
-    "main.js.map": "/euro-converter/static/js/main.ff0bb26a.chunk.js.map",
+    "main.js": "/euro-converter/static/js/main.709a73aa.chunk.js",
+    "main.js.map": "/euro-converter/static/js/main.709a73aa.chunk.js.map",
     "runtime-main.js": "/euro-converter/static/js/runtime-main.1dfd4d31.js",
     "runtime-main.js.map": "/euro-converter/static/js/runtime-main.1dfd4d31.js.map",
     "static/js/2.e277e1ec.chunk.js": "/euro-converter/static/js/2.e277e1ec.chunk.js",
     "static/js/2.e277e1ec.chunk.js.map": "/euro-converter/static/js/2.e277e1ec.chunk.js.map",
     "index.html": "/euro-converter/index.html",
-    "precache-manifest.0dd44a809c9c865d82c25f5c4cf81924.js": "/euro-converter/precache-manifest.0dd44a809c9c865d82c25f5c4cf81924.js",
+    "precache-manifest.9cf2db0116de465a855fb025d8b07021.js": "/euro-converter/precache-manifest.9cf2db0116de465a855fb025d8b07021.js",
     "service-worker.js": "/euro-converter/service-worker.js",
     "static/css/main.00069f1e.chunk.css.map": "/euro-converter/static/css/main.00069f1e.chunk.css.map",
     "static/js/2.e277e1ec.chunk.js.LICENSE.txt": "/euro-converter/static/js/2.e277e1ec.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.1dfd4d31.js",
     "static/js/2.e277e1ec.chunk.js",
     "static/css/main.00069f1e.chunk.css",
-    "static/js/main.ff0bb26a.chunk.js"
+    "static/js/main.709a73aa.chunk.js"
   ]
 }
