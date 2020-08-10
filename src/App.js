@@ -138,7 +138,10 @@ const App = () => {
               <InputLabel>Currency</InputLabel>
               <Select
                 value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
+                onChange={(e) => {
+                  setSelectedCurrency(e.target.value);
+                  if (!e.target.value) setResult(null);
+                }}
                 label="Currency"
               >
                 <MenuItem value="">
