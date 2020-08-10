@@ -7,7 +7,8 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 
 const App = () => {
   const [amount, setAmount] = useState();
-  const [currencies, setCurrencies] = useState();
+  const [currencies, setCurrencies] = useState([]);
+  const [rates, setRates] = useState([]);
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [result, setResult] = useState(null);
 
@@ -21,48 +22,60 @@ const App = () => {
 
   const getCurrencies = async () => {
     const currenciesArray = [];
-
     try {
       const res = await axios.get(
         `http://data.fixer.io/api/symbols?access_key=${API_KEY}`
       );
-
-      // Put received currencies in an array
-      for (const [key, value] of Object.entries(res.data.symbols)) {
-        currenciesArray.push({ symbol: key, name: value });
+      const { success, symbols } = res.data;
+      if (success) {
+        // Put received currencies in an array
+        for (const [key, value] of Object.entries(symbols)) {
+          currenciesArray.push({ symbol: key, name: value });
+        }
+        setCurrencies(currenciesArray);
       }
-      setCurrencies(currenciesArray);
     } catch (error) {
       console.log(error);
     }
   };
+  const getRates = async () => {
+    const ratesArray = [];
+    try {
+      const res = await axios.get(
+        `http://data.fixer.io/api/latest?access_key=${API_KEY}&base=EUR`
+      );
+      const { success, rates } = res.data;
+      if (success) {
+        for (const [key, value] of Object.entries(rates)) {
+          ratesArray.push({ symbol: key, rate: value });
+        }
+        setRates(ratesArray);
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   useEffect(() => {
-    // Get all available currencies
+    // Get all available currencies and rates
     getCurrencies();
+    getRates();
   }, []);
 
-  // TODO: Charger tous les taux de change une seule fois et les stocker dans le state, plutôt que faire des appels api à chaque changement de montant et de devise
   useEffect(() => {
-    const convert = async () => {
-      if (selectedCurrency) {
-        try {
-          const res = await axios.get(
-            `http://data.fixer.io/api/latest?access_key=${API_KEY}&base=EUR&symbols=${selectedCurrency}`
-          );
-          const { success, rates } = res.data;
-
-          if (success) {
-            const calculatedResult = amount * Object.values(rates)[0];
-            setResult(calculatedResult);
-          }
-        } catch (error) {
-          console.log("error", error);
+    const convert = () => {
+      if (rates.length > 0) {
+        const currencyRate = rates.find(
+          (rate) => rate.symbol === selectedCurrency
+        );
+        if (amount && currencyRate) {
+          const calculatedResult = (amount * currencyRate.rate).toFixed(4);
+          setResult(calculatedResult);
         }
       }
     };
-    amount && convert();
-  }, [amount, selectedCurrency]);
+    convert();
+  }, [amount, selectedCurrency, rates]);
 
   return (
     <div
@@ -115,9 +128,7 @@ const App = () => {
             </select>
           </div>
           {result ? (
-            <p className="result">{`${amount} EUR  = ${result.toFixed(
-              4
-            )} ${selectedCurrency}`}</p>
+            <p className="result">{`${amount} EUR  = ${result} ${selectedCurrency}`}</p>
           ) : (
             <p className="result">Your result will appear here</p>
           )}
